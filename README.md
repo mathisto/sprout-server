@@ -94,12 +94,33 @@ bundle exec bundle audit        # Gem vulnerabilities
 ### Architecture
 
 ```mermaid
+%%{
+  init: {
+    'theme': 'base',
+    'themeVariables': {
+      'primaryColor': '#1a1b26',
+      'primaryTextColor': '#a9b1d6',
+      'primaryBorderColor': '#7aa2f7',
+      'lineColor': '#7aa2f7',
+      'secondaryColor': '#24283b',
+      'tertiaryColor': '#414868'
+    }
+  }
+}%%
 graph TD
-    A[ESP32 Device] -->|HTTP POST| B[Rails API]
-    B -->|WebSocket| C[Browser Client]
-    B -->|Store| D[(PostgreSQL)]
-    C -->|Real-time Updates| E[Dashboard]
-    C -->|Notifications| F[Service Worker]
+    A[ESP32 Device]:::iot -->|HTTP POST| B[Rails API]:::server
+    B -->|WebSocket| C[Browser Client]:::client
+    B -->|Store| D[(PostgreSQL)]:::db
+    C -->|Real-time Updates| E[Dashboard]:::ui
+    C -->|Notifications| F[Service Worker]:::worker
+
+    classDef default fill:#1a1b26,stroke:#7aa2f7,color:#a9b1d6,stroke-width:2px
+    classDef iot fill:#2ac3de,stroke:#7dcfff,color:#1a1b26,stroke-width:2px
+    classDef server fill:#f7768e,stroke:#ff9e64,color:#1a1b26,stroke-width:2px
+    classDef client fill:#9ece6a,stroke:#73daca,color:#1a1b26,stroke-width:2px
+    classDef db fill:#bb9af7,stroke:#c0caf5,color:#1a1b26,stroke-width:2px
+    classDef ui fill:#e0af68,stroke:#ff9e64,color:#1a1b26,stroke-width:2px
+    classDef worker fill:#7aa2f7,stroke:#b4f9f8,color:#1a1b26,stroke-width:2px
 ```
 
 ## 📦 Deployment
