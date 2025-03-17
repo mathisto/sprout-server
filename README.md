@@ -7,6 +7,7 @@
 [![Rails](https://img.shields.io/badge/Rails-8.2.0-ff1744.svg?style=flat-square&logo=ruby-on-rails&logoColor=white&labelColor=1a1b26)](https://rubyonrails.org/)
 [![Ruby](https://img.shields.io/badge/Ruby-3.3.0-bb0826.svg?style=flat-square&logo=ruby&logoColor=white&labelColor=1a1b26)](https://www.ruby-lang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.0+-0055FF.svg?style=flat-square&logo=postgresql&logoColor=white&labelColor=1a1b26)](https://www.postgresql.org/)
+[![HTMX](https://img.shields.io/badge/HTMX-2.0-2D5FEB.svg?style=flat-square&logo=html5&logoColor=white&labelColor=1a1b26)](https://htmx.org/)
 [![Hotwire](https://img.shields.io/badge/Hotwire-Turbo_&_Stimulus-7e57c2.svg?style=flat-square&logo=hotwire&logoColor=white&labelColor=1a1b26)](https://hotwired.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8.svg?style=flat-square&logo=tailwind-css&logoColor=white&labelColor=1a1b26)](https://tailwindcss.com/)
 
@@ -27,7 +28,8 @@
 - 🔔 Instant notifications when plants need attention
 - 📱 Progressive Web App (PWA) support
 - 🤖 ESP32 device integration
-- 🔄 WebSocket-powered live updates
+- 🔄 HTMX-powered dynamic interactions
+- ⚡️ WebSocket live updates via Hotwire
 - 🎨 Modern, responsive UI with TailwindCSS
 - 🧪 Comprehensive test suite
 
