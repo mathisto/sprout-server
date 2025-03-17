@@ -162,6 +162,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - [Ruby on Rails](https://rubyonrails.org/) - The web framework that powers everything
+- [HTMX](https://htmx.org/) - For modern HTML-driven interactivity
 - [Hotwire](https://hotwired.dev/) - For making real-time updates a breeze
 - [TailwindCSS](https://tailwindcss.com/) - For the beautiful UI components
 - [Chart.js](https://www.chartjs.org/) - For the gorgeous data visualizations

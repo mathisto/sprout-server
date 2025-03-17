@@ -33,6 +33,17 @@
       animation: fade-in 1s ease-out;
     }
 
+    /* Animation for row movement */
+    @keyframes move-row {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-100%); }
+      100% { transform: translateY(0); }
+    }
+
+    .moving-row {
+      transition: transform 0.5s ease-out;
+    }
+
     /* Ensure links remain clickable */
     .plant-row td a {
       position: relative;
@@ -142,6 +153,33 @@
         
         // Add a class for animation
         row.classList.add('flash-highlight');
+
+        // Move the updated row to the top
+        const tbody = document.querySelector('#plants-table-body');
+        if (tbody && tbody.firstChild) {
+          // Add moving animation class
+          row.classList.add('moving-row');
+          
+          // Clone the row
+          const clone = row.cloneNode(true);
+          
+          // Remove the original row
+          row.remove();
+          
+          // Insert at the top
+          tbody.insertBefore(clone, tbody.firstChild);
+          
+          // Force reflow
+          void clone.offsetWidth;
+          
+          // Add highlight animation to the new row
+          clone.classList.add('flash-highlight');
+          
+          // Remove moving animation class after animation completes
+          setTimeout(() => {
+            clone.classList.remove('moving-row');
+          }, 500);
+        }
       }
       
       // Update state for next comparison
@@ -206,21 +244,31 @@
       const tempEl = document.createElement('div');
       tempEl.innerHTML = htmlContent;
       
-      // Replace the row with the new content
-      row.outerHTML = htmlContent;
+      // Get the tbody element
+      const tbody = document.querySelector('#plants-table-body');
       
-      // Flash the new row
-      const newRow = document.getElementById(`plant-row-${plantId}`);
-      if (newRow) {
-        console.log(`New row for plant ${plantId} found after update`);
-        // Ensure any animation is reset
-        newRow.classList.remove('flash-highlight');
-        // Force reflow to ensure the animation runs
-        void newRow.offsetWidth;
-        // Add the animation class
-        newRow.classList.add('flash-highlight');
-      } else {
-        console.warn(`New row for plant ${plantId} NOT found after update`);
+      // Remove the existing row
+      row.remove();
+      
+      // Insert the new row at the top of the table
+      if (tbody) {
+        tbody.insertAdjacentHTML('afterbegin', htmlContent);
+        
+        // Get the newly inserted row
+        const newRow = document.getElementById(`plant-row-${plantId}`);
+        if (newRow) {
+          console.log(`New row for plant ${plantId} found after update`);
+          // Add movement and highlight animations
+          newRow.classList.add('moving-row');
+          newRow.classList.add('flash-highlight');
+          
+          // Remove movement animation class after animation completes
+          setTimeout(() => {
+            newRow.classList.remove('moving-row');
+          }, 500);
+        } else {
+          console.warn(`New row for plant ${plantId} NOT found after update`);
+        }
       }
     } else {
       console.warn(`Row element plant-row-${plantId} not found in the DOM`);
