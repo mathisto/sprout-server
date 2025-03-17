@@ -111,10 +111,14 @@ bundle exec bundle audit        # Gem vulnerabilities
 }%%
 graph TD
     A[ESP32 Device]:::iot -->|HTTP POST| B[Rails API]:::server
-    B -->|WebSocket| C[Browser Client]:::client
+    B -->|ActionCable| C[Browser Client]:::client
     B -->|Store| D[(PostgreSQL)]:::db
-    C -->|Real-time Updates| E[Dashboard]:::ui
-    C -->|Notifications| F[Service Worker]:::worker
+    
+    C -->|HTMX Requests| B
+    B -->|HTML Fragments| C
+    
+    C -->|Turbo Streams| E[Dashboard]:::ui
+    C -->|Service Worker| F[PWA Notifications]:::worker
 
     classDef default fill:#1a1b26,stroke:#7aa2f7,color:#a9b1d6,stroke-width:2px
     classDef iot fill:#2ac3de,stroke:#7dcfff,color:#1a1b26,stroke-width:2px
