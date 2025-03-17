@@ -1,0 +1,25 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#4ade80" />
+  
+  <!-- Pot -->
+  <path d="M180 350 L332 350 L350 450 L162 450 Z" fill="#a16207" />
+  
+  <!-- Soil -->
+  <path d="M190 350 L322 350 L322 330 L190 330 Z" fill="#422006" />
+  
+  <!-- Plant stem -->
+  <path d="M256 330 L256 180 Q256 180 256 180" stroke="#166534" stroke-width="12" fill="none" />
+  
+  <!-- Leaves -->
+  <path d="M256 280 Q200 240 180 300" stroke="#16a34a" stroke-width="10" fill="none" />
+  <path d="M256 250 Q190 210 170 260" stroke="#16a34a" stroke-width="10" fill="none" />
+  <path d="M256 220 Q210 180 190 220" stroke="#16a34a" stroke-width="10" fill="none" />
+  
+  <path d="M256 280 Q312 240 332 300" stroke="#16a34a" stroke-width="10" fill="none" />
+  <path d="M256 250 Q322 210 342 260" stroke="#16a34a" stroke-width="10" fill="none" />
+  <path d="M256 220 Q302 180 322 220" stroke="#16a34a" stroke-width="10" fill="none" />
+  
+  <!-- Water droplet -->
+  <path d="M256 150 Q230 110 256 80 Q282 110 256 150 Z" fill="#0ea5e9" />
+</svg>

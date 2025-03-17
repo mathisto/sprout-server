@@ -1,0 +1,41 @@
+<% timestamp = Time.current.to_i %>
+<% @plants.each do |plant| %>
+  <tr 
+    id="plant-row-<%= plant.id %>" 
+    class="plant-row"
+    data-timestamp="<%= timestamp %>"
+    data-moisture="<%= plant.current_moisture || 0 %>"
+    data-reading-time="<%= plant.last_reading_time&.to_i || 0 %>">
+    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
+      <%= link_to plant_path(plant), class: "relative z-10 inline-block text-tokyonight-foreground transition-colors duration-150 hover:text-tokyonight-cyan cursor-pointer" do %>
+        <%= plant.name %>
+      <% end %>
+      <span class="text-xs text-tokyonight-comment">(<%= Time.current.strftime("%H:%M:%S") %>)</span>
+    </td>
+    <td class="whitespace-nowrap px-3 py-4 text-sm text-tokyonight-white"><%= plant.species %></td>
+    <td class="whitespace-nowrap px-3 py-4 text-sm text-tokyonight-white"><%= plant.current_moisture || "No data" %></td>
+    <td class="whitespace-nowrap px-3 py-4 text-sm">
+      <% if plant.current_moisture %>
+        <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium <%= plant_status_color(plant.moisture_status) %>">
+          <%= plant.moisture_status.capitalize %>
+        </span>
+      <% else %>
+        <span class="inline-flex items-center rounded-md bg-tokyonight-black px-2 py-1 text-xs font-medium text-tokyonight-comment">
+          Unknown
+        </span>
+      <% end %>
+    </td>
+    <td class="whitespace-nowrap px-3 py-4 text-sm text-tokyonight-white">
+      <%= plant.last_reading_time ? time_ago_in_words(plant.last_reading_time) + " ago" : "Never" %>
+    </td>
+    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+      <%= link_to plant_path(plant), class: "text-tokyonight-cyan hover:text-tokyonight-blue inline-flex items-center" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+        <span class="sr-only">View</span>
+      <% end %>
+    </td>
+  </tr>
+<% end %> 

@@ -1,0 +1,284 @@
+<div class="py-6">
+  <style>
+    /* Animation for highlighting updated rows */
+    @keyframes flash-highlight {
+      0% { background-color: rgba(86, 95, 137, 0.1); }
+      50% { background-color: rgba(86, 95, 137, 0.3); }
+      100% { background-color: rgba(86, 95, 137, 0); }
+    }
+    
+    .flash-highlight {
+      animation: flash-highlight 2s ease-out;
+      position: relative;
+    }
+    
+    .flash-highlight::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      animation: flash-highlight 2s ease-out;
+    }
+    
+    /* Animation for fading in updated cards */
+    @keyframes fade-in {
+      0% { opacity: 0.7; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    
+    .fade-in {
+      animation: fade-in 1s ease-out;
+    }
+
+    /* Ensure links remain clickable */
+    .plant-row td a {
+      position: relative;
+      z-index: 2;
+      pointer-events: auto;
+    }
+
+    /* Add button styling */
+    .add-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 50%;
+      background-color: #7aa2f7;
+      color: white;
+      transition: all 0.2s ease;
+      float: right;
+    }
+
+    .add-button:hover {
+      transform: scale(1.05);
+      background-color: #bb9af7;
+    }
+  </style>
+  
+  <main>
+    <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <% if @plants.empty? %>
+        <div class="text-center mt-8">
+          <svg class="mx-auto h-12 w-12 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          <h3 class="mt-2 text-sm font-semibold text-tokyonight-foreground">No plants</h3>
+          <p class="mt-1 text-sm text-secondary">Get started by adding your first plant.</p>
+          <div class="mt-6">
+            <%= link_to "Add Plant", new_plant_path, class: "btn-primary rounded-md px-4 py-2 text-sm font-semibold shadow-sm" %>
+          </div>
+        </div>
+      <% else %>
+        <!-- Table View -->
+        <div class="bg-tokyonight-black/30 shadow-lg sm:rounded-lg mt-8">
+          <div class="px-4 py-5 sm:p-6">
+            <div class="overflow-hidden shadow ring-1 ring-tokyonight-black/20 ring-opacity-5 sm:rounded-lg">
+              <table class="min-w-full divide-y divide-tokyonight-black/10">
+                <thead class="bg-tokyonight-black/20">
+                  <tr>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-tokyonight-foreground sm:pl-6">Name</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-tokyonight-foreground">Species</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-tokyonight-foreground">Moisture</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-tokyonight-foreground">Status</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-tokyonight-foreground">Last Reading</th>
+                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                      <span class="sr-only">Actions</span>
+                      <%= link_to new_plant_path, class: "add-button" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                      <% end %>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody 
+                  class="divide-y divide-tokyonight-black/10 bg-tokyonight-black/10" 
+                  id="plants-table-body">
+                  <%= render template: "plants/table_rows" %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </main>
+</div>
+
+<script>
+  // Track previous state to identify changed rows
+  let previousState = {};
+  
+  // Log HTMX events for debugging
+  document.body.addEventListener('htmx:afterSwap', function(event) {
+    console.log('🔄 HTMX swap completed:', event);
+    
+    // Find all plant rows in table view
+    const rows = document.querySelectorAll('#plants-table-body tr.plant-row');
+    
+    // For each row, check if data has changed
+    rows.forEach(row => {
+      const plantId = row.id;
+      const moisture = row.dataset.moisture;
+      const readingTime = row.dataset.readingTime;
+      
+      // If we have previous state for this plant and any data changed
+      if (previousState[plantId] && 
+          (previousState[plantId].moisture !== moisture || 
+           previousState[plantId].readingTime !== readingTime)) {
+        
+        console.log(`🌱 Plant ${plantId} changed: moisture ${previousState[plantId].moisture} → ${moisture}`);
+        
+        // Remove any existing animation
+        row.classList.remove('flash-highlight');
+        
+        // Force browser to acknowledge the class removal before adding it back
+        void row.offsetWidth;
+        
+        // Add a class for animation
+        row.classList.add('flash-highlight');
+      }
+      
+      // Update state for next comparison
+      previousState[plantId] = {
+        moisture: moisture,
+        readingTime: readingTime
+      };
+    });
+  });
+  
+  document.body.addEventListener('htmx:beforeRequest', function(event) {
+    console.log('📡 HTMX request starting:', event);
+  });
+  
+  document.body.addEventListener('htmx:afterRequest', function(event) {
+    console.log('✅ HTMX request completed:', event);
+  });
+  
+  document.body.addEventListener('htmx:responseError', function(event) {
+    console.error('❌ HTMX response error:', event);
+  });
+  
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Starting efficient polling for plant updates');
+    pollForUpdates();
+  });
+
+  // Set initial last update time to the current time
+  let lastUpdateTime = '<%= Time.current.to_s %>';
+  
+  // Update status indicator
+  function updateConnectionStatus(status) {
+    const statusIndicator = document.querySelector('#connection-status .h-2');
+    const statusText = document.querySelector('#connection-status');
+    if (statusIndicator) {
+      if (status === 'connected') {
+        statusIndicator.classList.remove('bg-tokyonight-red');
+        statusIndicator.classList.add('bg-tokyonight-green');
+        statusText.innerHTML = '<span class="h-2 w-2 rounded-full bg-tokyonight-green mr-2"></span>Connected';
+      } else {
+        statusIndicator.classList.remove('bg-tokyonight-green');
+        statusIndicator.classList.add('bg-tokyonight-red');
+        statusText.innerHTML = '<span class="h-2 w-2 rounded-full bg-tokyonight-red mr-2"></span>Disconnected';
+      }
+    }
+  }
+  
+  // Update a plant in the table view
+  function updatePlantRow(plantId, htmlContent) {
+    const row = document.getElementById(`plant-row-${plantId}`);
+    console.log(`Updating row for plant ${plantId}:`, { 
+      elementFound: !!row, 
+      htmlContentLength: htmlContent ? htmlContent.length : 0
+    });
+    
+    if (row) {
+      // Log the HTML content being applied
+      console.log(`HTML content for row ${plantId}:`, htmlContent.substring(0, 100) + '...');
+      
+      // Create a temporary element to hold the new HTML
+      const tempEl = document.createElement('div');
+      tempEl.innerHTML = htmlContent;
+      
+      // Replace the row with the new content
+      row.outerHTML = htmlContent;
+      
+      // Flash the new row
+      const newRow = document.getElementById(`plant-row-${plantId}`);
+      if (newRow) {
+        console.log(`New row for plant ${plantId} found after update`);
+        // Ensure any animation is reset
+        newRow.classList.remove('flash-highlight');
+        // Force reflow to ensure the animation runs
+        void newRow.offsetWidth;
+        // Add the animation class
+        newRow.classList.add('flash-highlight');
+      } else {
+        console.warn(`New row for plant ${plantId} NOT found after update`);
+      }
+    } else {
+      console.warn(`Row element plant-row-${plantId} not found in the DOM`);
+    }
+  }
+
+  // Poll for updates
+  function pollForUpdates() {
+    updateConnectionStatus('connected');
+    
+    console.log(`Polling for updates since ${lastUpdateTime}`);
+    
+    fetch(`/poll_updates?last_updated=${encodeURIComponent(lastUpdateTime)}`, {
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          console.error(`Network response error: ${response.status} ${response.statusText}`);
+          return response.text().then(text => {
+            console.error('Response body:', text);
+            throw new Error(`Network response was not ok: ${response.status}`);
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Poll response data:', data);
+        
+        // Update the timestamp for next poll
+        lastUpdateTime = data.timestamp;
+        
+        // If we have changes, update the specific plants
+        if (data.has_changes) {
+          console.log('Changes detected! Updating plants:', data.plants.length);
+          
+          // Process each plant update
+          data.plants.forEach(plant => {
+            console.log(`Updating plant ${plant.id}`);
+            
+            // Update in table view
+            updatePlantRow(plant.id, plant.table_html);
+          });
+        } else {
+          console.log('No changes detected');
+        }
+        
+        // Schedule the next poll
+        setTimeout(pollForUpdates, 3000); // Poll every 3 seconds
+      })
+      .catch(error => {
+        console.error('Error polling for updates:', error);
+        updateConnectionStatus('disconnected');
+        
+        // Try again after a delay
+        setTimeout(pollForUpdates, 5000);
+      });
+  }
+</script>

@@ -1,0 +1,145 @@
+<div class="min-h-full">
+  <div class="py-10">
+    <header>
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between">
+          <h1 class="text-3xl font-bold leading-tight tracking-tight text-tokyonight-foreground"><%= @plant.name.presence || "Unnamed Plant" %></h1>
+          <div>
+            <%= link_to "Back to Dashboard", root_path, class: "text-tokyonight-cyan hover:text-tokyonight-blue transition-colors duration-150" %>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          <!-- Plant details card -->
+          <div class="bg-tokyonight-selection/10 overflow-hidden shadow-lg rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg font-medium leading-6 text-tokyonight-foreground">Plant Details</h3>
+              <dl class="mt-5 grid grid-cols-1 gap-5">
+                <div>
+                  <dt class="text-sm font-medium text-tokyonight-comment">Species</dt>
+                  <dd class="mt-1 text-sm text-tokyonight-white"><%= @plant.species.presence || "Unknown" %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm font-medium text-tokyonight-comment">Location</dt>
+                  <dd class="mt-1 text-sm text-tokyonight-white"><%= @plant.location.presence || "Not specified" %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm font-medium text-tokyonight-comment">Preferred Moisture Range</dt>
+                  <dd class="mt-1 text-sm text-tokyonight-white">
+                    <% if @plant.preferred_moisture_min.present? && @plant.preferred_moisture_max.present? %>
+                      <%= @plant.preferred_moisture_min %>% - <%= @plant.preferred_moisture_max %>%
+                    <% else %>
+                      Not set
+                    <% end %>
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-sm font-medium text-tokyonight-comment">Device ID</dt>
+                  <dd class="mt-1 text-sm text-tokyonight-white"><%= @plant.slug %></dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+
+          <!-- Current moisture status card -->
+          <div class="bg-tokyonight-selection/10 overflow-hidden shadow-lg rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg font-medium leading-6 text-tokyonight-foreground">Current Moisture</h3>
+              <div class="mt-5">
+                <% if @plant.current_moisture.present? %>
+                  <div class="mb-4">
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="text-base font-medium text-tokyonight-white"><%= @plant.current_moisture %>%</span>
+                      <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium <%= plant_status_color(@plant.moisture_status) %>">
+                        <%= @plant.moisture_status.capitalize %>
+                      </span>
+                    </div>
+                    <div class="w-full bg-tokyonight-black/50 rounded-full h-4">
+                      <div class="h-4 rounded-full <%= @plant.moisture_status == 'optimal' ? 'bg-tokyonight-green' : (@plant.moisture_status == 'dry' ? 'bg-tokyonight-yellow' : 'bg-tokyonight-blue') %>" style="width: <%= @plant.current_moisture %>%"></div>
+                    </div>
+                  </div>
+                  <p class="text-sm text-tokyonight-comment">
+                    Last updated: <%= time_ago_in_words(@plant.last_reading_time) %> ago
+                  </p>
+                <% else %>
+                  <p class="text-sm text-tokyonight-comment">No moisture readings available</p>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions card -->
+          <div class="bg-tokyonight-selection/10 overflow-hidden shadow-lg rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg font-medium leading-6 text-tokyonight-foreground">Actions</h3>
+              <div class="mt-5 space-y-4">
+                <%= link_to edit_plant_path(@plant), class: "inline-flex w-full justify-center items-center rounded-md bg-tokyonight-black/50 px-3 py-2 text-sm font-semibold text-tokyonight-white shadow-sm ring-1 ring-inset ring-tokyonight-blue hover:bg-tokyonight-selection transition-colors duration-150" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <span>Edit Plant</span>
+                <% end %>
+                
+                <%= button_to plant_path(@plant), method: :delete, data: { confirm: "Are you sure you want to delete this plant?" }, class: "inline-flex w-full justify-center items-center rounded-md bg-tokyonight-red px-3 py-2 text-sm font-semibold text-tokyonight-white shadow-sm hover:bg-tokyonight-red/80 transition-colors duration-150" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  <span>Delete Plant</span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent readings -->
+        <div class="mt-8 bg-tokyonight-selection/10 shadow-lg sm:rounded-lg">
+          <div class="px-4 py-4 sm:px-6 sm:py-4">
+            <h3 class="text-lg font-medium leading-6 text-tokyonight-foreground">Recent Readings</h3>
+            
+            <% if @plant.recent_readings.any? %>
+              <% if @plant.readings_for_chart.count > 5 %>
+                <!-- Chart only shown if enough data points -->
+                <div class="mt-2 mb-2" style="height: 200px" data-controller="moisture-chart" data-readings="<%= @plant.readings_for_chart.map { |r| { moisture_level: r.moisture_level, recorded_at: r.recorded_at } }.to_json %>">
+                  <canvas data-moisture-chart-target="canvas"></canvas>
+                </div>
+              <% end %>
+              
+              <!-- Table with no extra margin when displayed directly after header -->
+              <div class="<%= @plant.readings_for_chart.count > 5 ? '' : 'mt-2' %> overflow-hidden shadow-lg ring-1 ring-tokyonight-black/20 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-tokyonight-black/10">
+                  <thead class="bg-tokyonight-black/20">
+                    <tr>
+                      <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-tokyonight-foreground sm:pl-6">Time</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-tokyonight-foreground">Moisture Level</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-tokyonight-foreground">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-tokyonight-black/10 bg-tokyonight-black/10">
+                    <% @plant.recent_readings.each do |reading| %>
+                      <tr>
+                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-tokyonight-white sm:pl-6">
+                          <%= reading.recorded_at.strftime("%b %d, %Y %H:%M") %>
+                        </td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-tokyonight-white"><%= reading.moisture_level %>%</td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm">
+                          <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium <%= plant_status_color(@plant.moisture_status_for(reading.moisture_level)) %>">
+                            <%= @plant.moisture_status_for(reading.moisture_level).capitalize %>
+                          </span>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            <% else %>
+              <p class="text-sm text-tokyonight-comment mt-2">No readings recorded yet</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div> 

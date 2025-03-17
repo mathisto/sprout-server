@@ -1,0 +1,59 @@
+# Ignore bundler config.
+/.bundle
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore pidfiles, but keep the directory.
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
+# Ignore uploaded files in development.
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/
+!/tmp/storage/.keep
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+
+# Ignore asset pipeline artifacts and compiled CSS/JS
+/public/assets
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
+# Ignore development environment configuration
+.env
+.env.development
+.env.local
+
+# Ignore IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+.cursor/
+
+# Ignore cache files
+.sass-cache
+/node_modules
+/yarn-error.log
+
+# Ignore system temp and cache directories
+/tmp/cache/
+/tmp/bootsnap/
+/tmp/bootsnap-compile-cache/
+/tmp/bootsnap-load-path-cache
+/tmp/cache/bootsnap/
+/tmp/cache/bootsnap-compile-cache/
+/tmp/cache/bootsnap-load-path-cache
+/tmp/cache/assets/
+/tmp/cache/webpacker/
+*.cache 

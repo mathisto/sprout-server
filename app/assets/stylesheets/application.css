@@ -1,0 +1,113 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
+ * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
+ * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
+ * depending on specificity.
+ *
+ * Consider organizing styles into separate files for maintainability.
+ */
+
+body {
+  background-color: #1a1b26 !important;
+  color: #c0caf5 !important;
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+header {
+  background-color: #1a1b26 !important;
+  border-bottom: 1px solid rgba(86, 95, 137, 0.2) !important;
+}
+
+main {
+  flex: 1 0 auto !important;
+}
+
+footer {
+  background-color: #1a1b26 !important;
+  border-top: 1px solid rgba(86, 95, 137, 0.2) !important;
+  margin-top: auto !important;
+  padding: 1.5rem 0 !important;
+}
+
+/* Flash highlight effect for updated rows */
+@keyframes flash-animation {
+  0% { background-color: rgba(114, 135, 253, 0.4); }
+  30% { background-color: rgba(114, 135, 253, 0.2); }
+  100% { background-color: transparent; }
+}
+
+.flash-highlight {
+  animation: flash-animation 1.5s ease-out forwards;
+}
+
+/* Card fade-in animation */
+@keyframes fade-in-animation {
+  0% { transform: scale(1.02); box-shadow: 0 0 15px rgba(114, 135, 253, 0.5); }
+  100% { transform: scale(1); box-shadow: none; }
+}
+
+.fade-in {
+  animation: fade-in-animation 0.8s ease-out forwards;
+}
+
+/* HTMX specific transitions */
+.htmx-settling tr {
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+}
+
+.htmx-request {
+  opacity: 0.7;
+}
+
+.htmx-swapping {
+  opacity: 0.5;
+  transition: opacity 0.2s ease-out;
+}
+
+/* Target individual rows for updates */
+tr.htmx-added {
+  animation: none; 
+}
+
+tr.flash-highlight {
+  animation: flash-animation 1.5s ease-out forwards;
+}
+
+tr {
+  transition: background-color 0.5s ease-out;
+}
+
+/* Enhanced button styles */
+.btn-primary {
+  background-color: #7aa2f7 !important;
+  color: #1a1b26 !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.btn-primary:hover {
+  background-color: #89b4fa !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Refined text colors */
+.text-secondary {
+  color: #9aa5ce !important;
+}
+
+.text-accent {
+  color: #bb9af7 !important;
+}
+
+/* Improved spacing */
+.dashboard-header {
+  margin-bottom: 2rem !important;
+}
+
+.dashboard-controls {
+  margin-bottom: 1.5rem !important;
+}

@@ -1,0 +1,47 @@
+# Example deployment configuration
+service: sprout_server
+
+# Name of the container image.
+image: example/sprout_server
+
+# Deploy to these servers.
+servers:
+  web:
+    - example.com
+  # job:
+  #   hosts:
+  #     - example.com
+  #   cmd: bin/jobs
+
+# Enable SSL auto certification via Let's Encrypt
+proxy:
+  ssl: true
+  host: sprout.example.com
+
+# Credentials for your image host.
+registry:
+  # Specify the registry server, if you're not using Docker Hub
+  # server: registry.digitalocean.com / ghcr.io / ...
+  username: <%= ENV["REGISTRY_USERNAME"] %>
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Inject ENV variables into containers
+env:
+  secret:
+    - RAILS_MASTER_KEY
+  clear:
+    SOLID_QUEUE_IN_PUMA: true
+    # Uncomment and adjust as needed:
+    # JOB_CONCURRENCY: 3
+    # WEB_CONCURRENCY: 2
+    # DB_HOST: your-db-host
+    # RAILS_LOG_LEVEL: debug
+
+volumes:
+  - "sprout_server_storage:/rails/storage"
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64 

@@ -1,0 +1,9 @@
+<div id="plants-container" class="mt-6">
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <% plants.each do |plant| %>
+      <div id="plant-card-<%= plant.id %>" class="plant-card-container">
+        <%= render 'plants/plant_card', plant: plant %>
+      </div>
+    <% end %>
+  </div>
+</div> 

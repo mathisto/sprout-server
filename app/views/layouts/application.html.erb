@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Sprout Server" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes Tailwind CSS and application stylesheets %>
+    <%= stylesheet_link_tag "tailwind", "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    
+    <!-- HTMX for simple live updates -->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.9.10"></script>
+  </head>
+
+  <body class="min-h-screen bg-tokyonight-background text-tokyonight-foreground">
+    <header class="shadow-sm">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-center">
+          <div class="flex flex-shrink-0 items-center">
+            <a href="/" class="flex items-center">
+              <img class="h-8 w-auto" src="/icon.svg" alt="Sprout Server">
+              <span class="ml-2 text-xl font-semibold text-tokyonight-foreground">Sprout Server</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+      <% if flash[:notice] %>
+        <div class="bg-tokyonight-blue/20 border-l-4 border-tokyonight-blue p-4 mb-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-tokyonight-blue" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-tokyonight-cyan"><%= flash[:notice] %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if flash[:alert] %>
+        <div class="bg-tokyonight-red/20 border-l-4 border-tokyonight-red p-4 mb-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-tokyonight-red" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-tokyonight-red"><%= flash[:alert] %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <footer>
+      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <p class="text-center text-sm text-secondary flex items-center justify-center">
+          <a href="/" class="hover:text-accent transition-colors duration-200">Sprout Server</a>
+          <span class="mx-2">•</span>
+          Plant Moisture Monitoring System
+          <span class="mx-2">•</span>
+          <span class="text-accent">Made with ♥ for Plants</span>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

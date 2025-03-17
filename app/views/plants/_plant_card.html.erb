@@ -1,0 +1,64 @@
+<%# Plant card component for grid view %>
+<div id="plant-card-content-<%= plant.id %>" class="bg-secondary rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 <%= 'fade-in' if defined?(highlight) && highlight %>">
+  <div class="p-4">
+    <div class="flex justify-between items-center mb-2">
+      <h2 class="text-lg font-bold truncate" title="<%= plant.slug %>"><%= plant.slug %></h2>
+      <div class="flex items-center">
+        <span class="text-sm px-2 py-1 rounded
+          <%= case plant.moisture_status
+              when 'dry'
+                'bg-error bg-opacity-20 text-error'
+              when 'wet'
+                'bg-error bg-opacity-20 text-error'
+              when 'optimal'
+                'bg-success bg-opacity-20 text-success'
+              else
+                'bg-info bg-opacity-20 text-info'
+              end %>">
+          <%= plant.current_moisture || '?' %>%
+        </span>
+      </div>
+    </div>
+    
+    <% if plant.species.present? %>
+      <p class="text-sm text-secondary mb-1 truncate" title="<%= plant.species %>"><%= plant.species %></p>
+    <% end %>
+    
+    <% if plant.location.present? %>
+      <p class="text-sm text-secondary mb-2 truncate" title="<%= plant.location %>"><%= plant.location %></p>
+    <% end %>
+    
+    <div class="flex justify-between items-center mb-2 text-xs text-secondary">
+      <span>
+        <% if plant.preferred_moisture_min.present? && plant.preferred_moisture_max.present? %>
+          Target: <%= plant.preferred_moisture_min %>-<%= plant.preferred_moisture_max %>%
+        <% end %>
+      </span>
+      <span>
+        <% if plant.last_reading_time.present? %>
+          <%= time_ago_in_words(plant.last_reading_time) %> ago
+        <% end %>
+      </span>
+    </div>
+    
+    <% trend_days = plant.trend_period %>
+    <div class="h-16 mb-2" title="Moisture trend over past <%= trend_days %> days">
+      <% if plant.trend_data(days: trend_days).present? %>
+        <canvas 
+          data-controller="trend-chart"
+          data-trend-chart-readings-value="<%= plant.trend_data(days: trend_days).to_json %>"
+          data-trend-chart-days-value="<%= trend_days %>"
+          data-trend-chart-target="canvas">
+        </canvas>
+      <% else %>
+        <div class="h-full flex items-center justify-center text-secondary text-xs italic">
+          No data available
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="mt-2 text-right">
+      <%= link_to "View Details", plant_path(plant), class: "text-accent-blue hover:text-accent-cyan text-sm" %>
+    </div>
+  </div>
+</div> 
